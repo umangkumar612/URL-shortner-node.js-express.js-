@@ -1,5 +1,5 @@
 const shortId = require('shortid');
-const URL = require('../models/url'); // Assuming this path is correct for your URL model
+const URL = require('../models/url'); // Assuming this path is correct
 
 async function HandleGenerateNewShortURL(req, res) {
     const body = req.body;
@@ -7,7 +7,6 @@ async function HandleGenerateNewShortURL(req, res) {
         return res.status(400).json({ error: "URL is required" });
     }
 
-    // Corrected: Call shortId.generate() to get a new unique ID
     const shortID = shortId.generate();
 
     await URL.create({
@@ -16,15 +15,28 @@ async function HandleGenerateNewShortURL(req, res) {
         visitHistory: [],
     });
 
-    return res.json({ id: shortID });
-} 
+    const urls = await URL.find(); // 🔁 Fetch all shortened URLs from DB
 
-async function HandleGetAnalytics(req,res) {
-    const shortId = req.params.shortId;
-   const result = await URL.findOne({shortId})
-    return res.json({totalClickes : result.visitHistory.length , analytics:result.visitHistory})
+    return res.render('home', {
+        shortId: shortID,
+        urls, // ✅ now 'urls' is available in EJS
+    });
 }
 
+async function HandleGetAnalytics(req, res) {
+    const shortId = req.params.shortId;
+    const result = await URL.findOne({ shortId });
+
+    if (!result) {
+        return res.status(404).json({ error: "Short URL not found" });
+    }
+
+    return res.json({
+        totalClicks: result.visitHistory.length,
+        analytics: result.visitHistory,
+    });
+}
+    
 module.exports = {
     HandleGenerateNewShortURL,
     HandleGetAnalytics,

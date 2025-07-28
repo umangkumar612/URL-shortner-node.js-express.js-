@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+</head>
+<body style="text-align: center; font-family: Verdana;">
+    <h1>Login</h1>
+
+    <% if (typeof warning !== 'undefined') { %>
+        <p style="color: red;"><%= warning %></p>
+    <% } %>
+
+    <form action="/user/login" method="POST">
+        <label>Email</label>
+        <input type="text" name="email" required placeholder="eg; xyz@gmail.com">
+        <br><br>
+        <label>Password</label>
+        <input type="password" name="password" required placeholder="Enter your password">
+        <br><br>
+        <button type="submit">Login</button>
+    </form>
+</body>
+</html>

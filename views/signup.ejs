@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signup</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: Verdana, Geneva, Tahoma, sans-serif;
+    }
+    input {
+      padding: 8px;
+      width: 250px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+    <h1>Signup</h1>
+
+    <% if (typeof warning !== 'undefined') { %>
+        <p style="color: red;"><%= warning %></p>
+    <% } %>
+
+    <form action="/user/signup" method="POST">
+        <label>Full Name</label>
+        <input type="text" required name="name" placeholder="Enter your name here..">
+        <br><br>
+        <label>Email</label>
+        <input type="text" required name="email" placeholder="eg; xyz123@gmail.com">
+        <br><br>
+        <label>Password</label>
+        <input type="text" required name="password" placeholder="Enter your Password">
+        <br><br>
+        <button type="submit">Signup</button>
+    </form>
+</body>
+
+</html>
