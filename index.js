@@ -7,7 +7,7 @@ const cookieParser = require('cookie-parser');
 const { Timestamp } = require('bson');
 const staticRoute = require('./router/staticRouter');
 const userRoute = require('./router/user');
-const {restrictToUserLoggedinOnly, checkAuth} = require('./middlewares/auth')
+const {restrictTo, checkForAuthentication} = require('./middlewares/auth')
 
 const app = express();  
 const port = 1001;
@@ -18,13 +18,14 @@ connectToMongoDB('mongodb://localhost:27017/short-url').then(() =>{
 app.set('view engine' , "ejs");
 app.set('views' , path.resolve('./views'));
 
+app.use(cookieParser() );
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser() );
+app.use(checkForAuthentication);
 
-app.use('/url', restrictToUserLoggedinOnly,urlRoute);
+app.use('/url',restrictTo(["NORMAL"]), urlRoute);
 app.use('/user', userRoute);
-app.use('/', checkAuth,staticRoute);
+app.use('/',staticRoute);
 
 // Home route
 app.get('/', async (req, res) => {

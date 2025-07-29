@@ -1,25 +1,35 @@
-const {getUser} = require('../service/auth');
-async function restrictToUserLoggedinOnly(req,res,next) {
-    const userUid = req.cookies?.uid;
-    
-    if(!userUid){
+const { getUser } = require('../service/auth');
+
+function checkForAuthentication(req, res, next) {
+    const token = req.cookies?.token;
+    if (!token) {
         return res.redirect('/login');
     }
-    const user = getUser(userUid);
-    if(!user){
+
+    const user = getUser(token);
+    if (!user) {
         return res.redirect('/login');
     }
+
     req.user = user;
     next();
 }
 
-async function checkAuth(req, res, next){
-     const userUid = req.cookies?.uid;
-    const user = getUser(userUid);
-    req.user = user;
-    next();
+function restrictTo(roles = []) {
+    return function (req, res, next) {
+        if (!req.user) {
+            return res.redirect('/login');
+        }
+
+        if (!roles.includes(req.user.role)) {
+            return res.render("home", { urls: [] }); // still shows home but empty
+        }
+
+        next();
+    };
 }
+
 module.exports = {
-    restrictToUserLoggedinOnly,
-    checkAuth,
-}
+    checkForAuthentication,
+    restrictTo,
+};

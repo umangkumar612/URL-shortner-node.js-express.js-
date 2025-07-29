@@ -6,6 +6,11 @@ const urlSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  role :{
+   type :String,
+   required:true,
+   default : "NORMAL",
+  },
   redirectURL: {
     type: String,
     required: true,

@@ -30,11 +30,12 @@ async function HandleUserLogin(req, res) {
         // Wrong password
         return res.render("login", { warning: "Incorrect email or password. Try again." });
     }
-  const sessionId = uuidv4();
-  setUser(sessionId , user);
-  res.cookie('uid', sessionId);
+ 
+  const token = setUser(user);
+  res.cookie('token', token);
     // ✅ Login successful
-    return res.redirect('/');
+    // return res.redirect('/');
+    return res.redirect('/'); 
 }
 
 module.exports = {
